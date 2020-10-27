@@ -200,7 +200,7 @@ def update_prediction(X1, X2, X3, X4, X5):
     prediction = np.expm1(prediction)
 
     # And retuned to the Output of the callback function
-    return "Prediction: {}".format(round(prediction,1))
+    return "Prediction: {} bikes will be rented".format(int(prediction))
 
 if __name__ == "__main__":
     app.run_server(debug=True)
