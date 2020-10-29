@@ -48,7 +48,6 @@ fig_features_importance.add_trace(go.Bar(x=df_feature_importances.index,
                                          y=df_feature_importances["Importance"],
                                          marker_color='rgb(171, 226, 251)')
                                  )
-fig_features_importance.update_layout(title_text='<b>Features Importance of the model<b>', title_x=0.5)
 
 # We record the name, min, mean and max of the three most important features
 slider_1_label = "Temperature"
@@ -76,18 +75,6 @@ slider_5_min = 0
 slider_5_mean = 0
 slider_5_max = 1
 
-"""
-<H1>  Title
-<DCC> Features Importance Chart
-<H4>  #1 Importance Feature Name
-<DCC> #1 Feature slider
-<H4>  #2 Importance Feature Name
-<DCC> #2 Feature slider
-<H4>  #2 Importance Feature Name
-<DCC> #2 Feature slider
-<H2>  Updated predictions
-"""
-
 ###############################################################################
 
 app = dash.Dash()
@@ -104,77 +91,120 @@ app = dash.Dash()
 #    Callback fuction with Sliders values as inputs and Prediction as Output
 
 # We apply basic HTML formatting to the layout
-app.layout = html.Div(style={'textAlign': 'center', 'width': '800px', 'font-family': 'Verdana'},
+app.layout = html.Div([
 
-                    children=[
+    # First Row
+    html.Div([
+        # Image and Input container left
+        html.Div([
+            html.Img(id="bike image",
+                     height="180px",
+                     src="assets/bike_flipped.jpg",
+                     style={"border-radius": "20px"}),
 
-                        # Title display
-                        html.H1(children="Bike Share Demand Dashboard"),
+            # Title display
+            html.H1(children="How many bikes will be rented?"),
 
-                        # Dash Graph Component calls the fig_features_importance parameters
-                        dcc.Graph(figure=fig_features_importance),
+            # We display the most important feature's name
+            html.H4(children="Prediction:", style={"fontSize": "25px"}),
+            html.H2(id="prediction_result", style={"fontSize": "60px"}),
+        ], className="pretty-container three columns"),
 
-                        # We display the most important feature's name
-                        html.H4(children=slider_1_label),
+        # Title and main-sliders container right
+        html.Div([
+            html.Div([
+                html.H1('Dashboard Capital Bikeshare',
+                        style={"textAlign": "center",
+                               "display":"flex",
+                               "alignItems":"center",
+                               "justifyContent": "center"})
+            ], className="pretty-container"),
 
-                        # The Dash Slider is built according to Feature #1 ranges
-                        dcc.Slider(
-                            id='X1_slider',
-                            min=slider_1_min,
-                            max=slider_1_max,
-                            step=1.0,
-                            value=slider_1_mean,
-                            marks={i: '{}°'.format(i) for i in range(slider_1_min, slider_1_max+1, 5)}
-                            ),
+            # The Dash Slider is built according to Feature #1 ranges
+            html.Div([
 
-                        html.H4(children=slider_2_label),
+                html.H4(children=slider_1_label),
 
-                        dcc.Slider(
-                            id='X2_slider',
-                            min=slider_2_min,
-                            max=slider_2_max,
-                            step=1.0,
-                            value=slider_2_mean,
-                            marks={i: '{}h'.format(i) for i in range(slider_2_min, slider_2_max+1)}
-                        ),
+                dcc.Slider(
+                    id='X1_slider',
+                    min=slider_1_min,
+                    max=slider_1_max,
+                    step=1.0,
+                    value=slider_1_mean,
+                    marks={i: '{}°'.format(i) for i in range(slider_1_min, slider_1_max+1, 5)}
+                    ),
 
-                        html.H4(children=slider_3_label),
+                html.H4(children=slider_2_label),
 
-                        dcc.Slider(
-                            id='X3_slider',
-                            min=slider_3_min,
-                            max=slider_3_max,
-                            step=1.0,
-                            value=slider_3_mean,
-                            marks={i: '{}'.format(i) for i in range(slider_3_min, slider_3_max+1)},
-                        ),
+                dcc.Slider(
+                    id='X2_slider',
+                    min=slider_2_min,
+                    max=slider_2_max,
+                    step=1.0,
+                    value=slider_2_mean,
+                    marks={i: '{}h'.format(i) for i in range(slider_2_min, slider_2_max+1)}
+                ),
 
-                        html.H4(children=slider_4_label),
+                html.H4(children=slider_3_label),
 
-                        dcc.Slider(
-                            id='X4_slider',
-                            min=slider_4_min,
-                            max=slider_4_max,
-                            step=5.0,
-                            value=slider_4_mean,
-                            marks={i: '{}%'.format(i) for i in range(slider_4_min, slider_4_max+1, 5)},
-                        ),
+                dcc.Slider(
+                    id='X3_slider',
+                    min=slider_3_min,
+                    max=slider_3_max,
+                    step=1.0,
+                    value=slider_3_mean,
+                    marks={i: '{}'.format(i) for i in range(slider_3_min, slider_3_max+1)},
+                ),
 
-                        html.H4(children=slider_5_label),
+                html.H4(children=slider_4_label),
 
-                        dcc.Slider(
-                            id='X5_slider',
-                            min=slider_5_min,
-                            max=slider_5_max,
-                            step=1.0,
-                            value=slider_5_mean,
-                            marks={i: '{}'.format(i) for i in range(slider_5_min, slider_5_max+1)},
-                        ),
+                dcc.Slider(
+                    id='X4_slider',
+                    min=slider_4_min,
+                    max=slider_4_max,
+                    step=5.0,
+                    value=slider_4_mean,
+                    marks={i: '{}%'.format(i) for i in range(slider_4_min, slider_4_max+1, 5)},
+                ),
 
-                        # The predictin result will be displayed and updated here
-                        html.H2(id="prediction_result"),
+                html.H4(children=slider_5_label),
 
-                    ])
+                dcc.Slider(
+                    id='X5_slider',
+                    min=slider_5_min,
+                    max=slider_5_max,
+                    step=1.0,
+                    value=slider_5_mean,
+                    marks={i: '{}'.format(i) for i in range(slider_5_min, slider_5_max+1)},
+                )],
+                     className="pretty-container")
+
+        ], className="basic-container-column twelve columns"),
+
+    ], className="basic-container"),
+
+
+    # Second Row
+    html.Div([
+        html.H3("Influence of weather-conditions",
+                style={"textAlign": "center",
+                       "fontSize": "20px",
+                       "fontWeight": "normal"})
+
+    ], className="pretty-container"),
+
+    # Third Row
+    html.Div([
+        html.Div([
+            dcc.Graph(figure=fig_features_importance)])
+    ], className="pretty-container twelve columns")
+
+], className="general")
+
+
+###############################################################################
+
+###############################################################################
 # The callback function will provide one "Ouput" in the form of a string (=children)
 @app.callback(Output(component_id="prediction_result",component_property="children"),
 # The values correspnding to the three sliders are obtained by calling their id and value property
@@ -200,7 +230,7 @@ def update_prediction(X1, X2, X3, X4, X5):
     prediction = np.expm1(prediction)
 
     # And retuned to the Output of the callback function
-    return "Prediction: {} bikes will be rented".format(int(prediction))
+    return "{}".format(int(prediction))
 
 if __name__ == "__main__":
     app.run_server(debug=True)
