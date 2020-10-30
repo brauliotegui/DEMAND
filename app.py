@@ -75,6 +75,26 @@ slider_5_min = 0
 slider_5_mean = 0
 slider_5_max = 1
 
+slider_6_label = "Month"
+slider_6_min = 1
+slider_6_mean = 6
+slider_6_max = 12
+
+options_months = [
+    {'label': 'January', 'value': 1},
+    {'label': 'February', 'value': 2},
+    {'label': 'March', 'value': 3},
+    {'label': 'April', 'value': 4},
+    {'label': 'May', 'value': 5},
+    {'label': 'June', 'value': 6},
+    {'label': 'July', 'value': 7},
+    {'label': 'August', 'value': 8},
+    {'label': 'September', 'value': 9},
+    {'label': 'October', 'value': 10},
+    {'label': 'November', 'value': 11},
+    {'label': 'December', 'value': 12}]
+
+
 ###############################################################################
 
 app = dash.Dash()
@@ -153,7 +173,7 @@ app.layout = html.Div([
                     max=slider_3_max,
                     step=1.0,
                     value=slider_3_mean,
-                    marks={i: '{}'.format(i) for i in range(slider_3_min, slider_3_max+1)},
+                    marks={1: 'Clear', 2: 'Cloudy', 3: 'Light Rain', 4: 'Heavy Rain'},
                 ),
 
                 html.H4(children=slider_4_label),
@@ -167,17 +187,23 @@ app.layout = html.Div([
                     marks={i: '{}%'.format(i) for i in range(slider_4_min, slider_4_max+1, 5)},
                 ),
 
+                html.H4(children=slider_6_label),
+
+                dcc.Dropdown(
+                    id='X6_slider',
+                    className="input-line",
+                    style={"flex-grow":"3",},
+                    options=options_months,
+                    value=1),
+
                 html.H4(children=slider_5_label),
 
-                dcc.Slider(
+                dcc.RadioItems(
                     id='X5_slider',
-                    min=slider_5_min,
-                    max=slider_5_max,
-                    step=1.0,
-                    value=slider_5_mean,
-                    marks={i: '{}'.format(i) for i in range(slider_5_min, slider_5_max+1)},
-                )],
-                     className="pretty-container")
+                    options=[{"label": "Yes", 'value':1},
+                            {"label": "No", 'value':0}],
+                    value=1)],
+                    className="pretty-container")
 
         ], className="basic-container-column twelve columns"),
 
@@ -209,10 +235,10 @@ app.layout = html.Div([
 @app.callback(Output(component_id="prediction_result",component_property="children"),
 # The values correspnding to the three sliders are obtained by calling their id and value property
               [Input("X1_slider","value"), Input("X2_slider","value"), Input("X3_slider","value"),
-              Input("X4_slider","value"), Input("X5_slider","value")])
+              Input("X4_slider","value"), Input("X5_slider","value"), Input("X6_slider","value")])
 
 # The input variable are set in the same order as the callback Inputs
-def update_prediction(X1, X2, X3, X4, X5):
+def update_prediction(X1, X2, X3, X4, X5, X6):
 
     # We create a NumPy array in the form of the original features
     # ["Pressure","Viscosity","Particles_size", "Temperature","Inlet_flow", "Rotating_Speed","pH","Color_density"]
@@ -221,7 +247,7 @@ def update_prediction(X1, X2, X3, X4, X5):
                        X["atemp"].mean(),
                        X5,
                        X2,
-                       X["month"].mean(),
+                       X6,
                        X3,
                        X4]).reshape(1,-1)
 
