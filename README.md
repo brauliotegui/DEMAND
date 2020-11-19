@@ -1,5 +1,5 @@
 # DEMAND
-An interactive dashboard based on a Linear Regression model for estimating demand for bike rentals in Washington, D.C.
+An interactive dashboard based on a Linear Regression model for predicting demand for bike rentals in Washington, D.C.
 
 An approach to Machine Learning with Linear Regression models. Through intensive Explorative Data Analysis, correlation analysis, and feature engineering I was able to construct robust models to estimate number of bike rentals at any particular time. GridSearchCV was used to attain the best fitting model and parameters.
 
